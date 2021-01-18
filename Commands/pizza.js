@@ -3,12 +3,20 @@ module.exports = {
 	description: 'This is test for taking pizza requests.',
 	execute(message, args) {
 
-		var beginning = 'I\'m still in beta, so pretend this is a picture of delicious ';
+		var beginning = 'I\'m still in beta, so I can\'t really do requests yet. Pretend this is a picture of delicious ';
 
 		var uniqueToppings = args.reduce(function (a, b) {
 			if (a.indexOf(b) < 0) a.push(b);
 			return a;
 		}, []);
+
+		console.log(uniqueToppings.length);
+
+		var uniqueToppings = uniqueToppings.filter(function (value, index, arr) {
+			return (value != 'and' && value != '&'); // god damnit daniel
+		})
+
+		console.log(uniqueToppings.length);
 
 		if (uniqueToppings.length == 1 && !(uniqueToppings[0] == null)) {
 
@@ -74,7 +82,9 @@ module.exports = {
 			
 		} else {
 
-			message.channel.send(beginning + 'pizza :pizza:. ' + 'Bone appletea, ' + message.author.username.toString() + '!');
+			message.channel.send('I\'m in beta, so this is the only pizza I\'ve got right now, sorry!', { files: ["./images/testpizza.jpg"]});
+
+			//message.channel.send(beginning + 'pizza :pizza:. ' + 'Bone appletea, ' + message.author.username.toString() + '!');
 
 		}		
 	}
