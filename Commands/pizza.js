@@ -86,6 +86,6 @@ module.exports = {
 
 			//message.channel.send(beginning + 'pizza :pizza:. ' + 'Bone appletea, ' + message.author.username.toString() + '!');
 
-		}		
+		}	
 	}
 }

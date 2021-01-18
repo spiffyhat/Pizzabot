@@ -27,11 +27,14 @@ client.on('message', message => {
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
+    const d = new Date(message.createdTimestamp);
 
     if (command === 'ping') {
         client.commands.get('ping').execute(message, args);
+        console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
     } else if (command === 'pizza') {
         client.commands.get('pizza').execute(message, args);
+        console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
     }
 })
 
