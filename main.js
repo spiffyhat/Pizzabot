@@ -1,10 +1,12 @@
+const fs = require('fs');
 const Discord = require('discord.js');
+const config = require('./config.js');
 
 const client = new Discord.Client();
-const DISCORDKEY = 'ODAwNDg3MzEwMDcyMzQ4NzUy.YAS15w.kJRLHZOvfsKfkKhwYKUTGK_p6_U'
+const DISCORDKEY = config.DISCORDKEY;
 const prefix = '-'
 
-const fs = require('fs');
+
 
 client.commands = new Discord.Collection();
 
@@ -33,5 +35,6 @@ client.on('message', message => {
     }
 })
 
-
+//console.log(DISCORDKEY);
+//console.log(config.DISCORDKEY);
 client.login(DISCORDKEY);
