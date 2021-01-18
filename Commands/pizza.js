@@ -10,13 +10,13 @@ module.exports = {
 			return a;
 		}, []);
 
-		console.log(uniqueToppings.length);
+		// console.log(uniqueToppings.length);
 
 		var uniqueToppings = uniqueToppings.filter(function (value, index, arr) {
 			return (value != 'and' && value != '&'); // god damnit daniel
 		})
 
-		console.log(uniqueToppings.length);
+		// console.log(uniqueToppings.length);
 
 		if (uniqueToppings.length == 1 && !(uniqueToppings[0] == null)) {
 
