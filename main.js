@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 
 const client = new Discord.Client();
-
+const DISCORDKEY = 'ODAwNDg3MzEwMDcyMzQ4NzUy.YAS15w.kJRLHZOvfsKfkKhwYKUTGK_p6_U'
 const prefix = '-'
 
 const fs = require('fs');
@@ -34,4 +34,4 @@ client.on('message', message => {
 })
 
 
-client.login('ODAwNDg3MzEwMDcyMzQ4NzUy.YAS15w.kJRLHZOvfsKfkKhwYKUTGK_p6_U');
+client.login(DISCORDKEY);
