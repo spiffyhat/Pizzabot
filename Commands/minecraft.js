@@ -9,10 +9,11 @@ const replies = {
     status: {
         command: '.status',
         text: {
-            error: 'Error getting {serverName} Minecraft server status. It may be offline!', // Check your terminal when you see this
+            error: 'Error getting {serverName} Minecraft server status. It may be offline or restarting!', // Check your terminal when you see this
             online: '**{serverName}** Minecraft server is **online**  -  ',
             players: '**{online}** people are playing!', // {online} will show player count
-            lastChecked : ' (data is updated every {cacheSeconds} seconds)',
+            lastChecked: ' (data is updated every {cacheSeconds} seconds)',
+            checking: 'Checking...',
             noPlayers: '**Nobody is playing**'
         }
 
@@ -30,7 +31,8 @@ module.exports = {
     description: 'This checks the status of the Arcade Discord Server',
     execute(message, args, minecraftServer) {
         server = minecraftServer;
-        statusCommand(message);
+        message.reply(replies.status.text.checking).then((msg) => statusCommand(msg));
+        //statusCommand(newMessage);
     }
 }
 
@@ -48,7 +50,8 @@ function statusCommand(message) { // Handle status command
             })
             .catch(err => {
                 console.error(err);
-                return message.reply(replies.status.text.error.replace('{serverName}', server.name));
+                message.edit(message.content.replace(replies.status.text.checking, replies.status.text.error.replace('{serverName}', server.name)));
+                //return message.reply(replies.status.text.error.replace('{serverName}', server.name));
             });
     } else { // Use cached data
         replyStatus(message)
@@ -63,7 +66,7 @@ function replyStatus(message) {
     status = status.replace('{serverName}', server.name)
     status = status.replace('{online}', data.onlinePlayers);
     status = status.replace('{cacheSeconds}', cacheSeconds);
-    message.reply(status);
+    message.edit(message.content.replace(replies.status.text.checking, status));
 }
 
 //function ipCommand(message) { // Handle IP command
