@@ -2,8 +2,9 @@ const util = require('minecraft-server-util');
 
 const cacheSeconds = 30;
 const cacheTime = cacheSeconds * 1000; // 30 sec cache time
-let data, lastUpdated = 0;
+let data, fullData, lastUpdated = 0;
 let server;
+let thisArgs;
 
 const replies = {
     status: {
@@ -12,6 +13,7 @@ const replies = {
             error: 'Error getting {serverName} Minecraft server status. It may be offline or restarting!', // Check your terminal when you see this
             online: '**{serverName}** Minecraft server is **online**  -  ',
             players: '**{online}** people are playing!', // {online} will show player count
+            playersList: '**Players online:** ',
             lastChecked: ' (data is updated every {cacheSeconds} seconds)',
             checking: 'Checking...',
             noPlayers: '**Nobody is playing**'
@@ -31,6 +33,7 @@ module.exports = {
     description: 'This checks the status of the Arcade Discord Server',
     execute(message, args, minecraftServer) {
         server = minecraftServer;
+        thisArgs = args;
         message.reply(replies.status.text.checking).then((msg) => statusCommand(msg));
         //statusCommand(newMessage);
     }
@@ -62,11 +65,22 @@ function replyStatus(message) {
     let { text } = replies.status;
     let status = text.online;
     status += data.onlinePlayers ? text.players : text.noPlayers;
-    status += text.lastChecked;
+    
     status = status.replace('{serverName}', server.name)
     status = status.replace('{online}', data.onlinePlayers);
+
+    status += data.onlinePlayers ? "\r\n" + text.playersList + "\r\n" + getPlayers(data.samplePlayers) : ""; 
+    status += text.lastChecked;
     status = status.replace('{cacheSeconds}', cacheSeconds);
     message.edit(message.content.replace(replies.status.text.checking, status));
+}
+
+function getPlayers(sample) {
+    let retval = "";
+    for (const player of sample) {
+        retval += player.name + "\r\n";
+    }
+    return retval;
 }
 
 //function ipCommand(message) { // Handle IP command

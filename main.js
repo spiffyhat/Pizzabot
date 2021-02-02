@@ -5,7 +5,7 @@ const config = require('./config.js');
 
 const client = new Discord.Client();
 const DISCORDKEY = config.DISCORDKEY;
-const prefix = '-'
+const prefix = config.PREFIX;
 
 const minecraftServer = {
     name: config.MINECRAFTSERVERNAME,
@@ -44,6 +44,10 @@ client.on('message', message => {
         //console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
     } else if (command === 'minecraft') {
         client.commands.get('minecraft').execute(message, args, minecraftServer);
+        console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString());
+        //console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
+    } else if (command === 'codyiscool') {
+        client.commands.get('codyiscool').execute(message, args, minecraftServer);
         console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString());
         //console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
     }
