@@ -25,17 +25,38 @@ const replies = {
         text: {
             main: 'The IP for the server is `{ip}:{port}`' // {ip} and {port} will show server ip and port from above
         }
+    },
+    rcon: {
+        text: {
+            sending: 'Sending test message to Minecraft server...',
+            sendsuccess: 'Successfully sent test message to server.',
+            sendfail: 'There was a problem sending the test message to the Minecraft server.'
+        }
     }
 };
 
 module.exports = {
     name: 'minecraft',
     description: 'This checks the status of the Arcade Discord Server',
-    execute(message, args, minecraftServer) {
-        server = minecraftServer;
-        thisArgs = args;
-        message.reply(replies.status.text.checking).then((msg) => statusCommand(msg));
-        //statusCommand(newMessage);
+    execute(message, args, minecraftServer, rcon) {
+        if (args.length > 0 && args[0] === 'saytest') {
+            message.reply(replies.rcon.text.sending).then((rconmsg) => rconTest(rcon, rconmsg));
+        } else {
+            server = minecraftServer;
+            thisArgs = args;
+            message.reply(replies.status.text.checking).then((msg) => statusCommand(msg));
+            //statusCommand(newMessage);
+        }
+    }
+}
+
+function rconTest(rcon, message) {
+    try {
+        rcon.send('/say This is a test!');
+        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendsuccess));
+    } catch (error) {
+        console.error(error);
+        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
     }
 }
 
