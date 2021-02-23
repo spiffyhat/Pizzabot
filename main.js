@@ -57,7 +57,7 @@ client.on('message', message => {
     console.log('Received: \'' + message.content + '\' from ' + message.author.username + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + (message.guild ? (' in ' + message.guild.name + ' - ' + message.channel.name) : ''));
 
     if (!client.commands.has(commandName)) {
-        console.log('command \'' + command + '\' not present in list')
+        console.log('command \'' + commandName + '\' not present in list')
         return;
     }
 
