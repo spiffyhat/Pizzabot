@@ -6,6 +6,7 @@ const config = require('./config.js');
 const client = new Discord.Client();
 const DISCORDKEY = config.DISCORDKEY;
 const prefix = config.PREFIX;
+const specialAliases = config.SPECIALALIASES;
 
 const Rcon = require('rcon');
 
@@ -38,8 +39,17 @@ client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
+    for (const [key, value] of Object.entries(specialAliases)) {
+        if (value.toString() === command.name.toString()) {
+            console.log("Found special alias " + key.toString() + " for command " + value.toString());
+            command.aliases += (key.toString);
+            console.log("Added alias successfully.");
+        }
+    }
     client.commands.set(command.name, command);
 }
+
+
 
 
 client.once('ready', () => {
@@ -48,20 +58,37 @@ client.once('ready', () => {
 })
 
 client.on('message', message => {
-    if (!message.content.startsWith(prefix) || message.author.bot ) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
-    const commandName = args.shift().toLowerCase();
+    var commandName = args.shift().toLowerCase();
+    const specialCommand = message.content.split(/ +/).shift();
+
+    if ((!Object.keys(specialAliases).includes(specialCommand) && !message.content.startsWith(prefix)) || message.author.bot) return;
+
+    if (Object.keys(specialAliases).includes(specialCommand)) {
+        console.log("using special command " + specialCommand + " for " + specialAliases[specialCommand]);
+        commandName = specialAliases[specialCommand];
+    }
+
     const d = new Date(message.createdTimestamp);
 
     console.log('Received: \'' + message.content + '\' from ' + message.author.username + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + (message.guild ? (' in ' + message.guild.name + ' - ' + message.channel.name) : ''));
 
-    if (!client.commands.has(commandName)) {
-        console.log('command \'' + commandName + '\' not present in list')
-        return;
-    }
+    //if (!client.commands.has(commandName)) {
+    //    console.log('command \'' + commandName + '\' not present in list')
+    //    return;
+    //}
 
-    const command = client.commands.get(commandName);
+    //const command = client.commands.get(commandName);
+
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
+    if (!command) {
+        console.log('No command found! SOMETHING IS WRONG');
+        return;
+    } 
+
+    console.log(command.name + " identified...");
 
     try {
         switch (command.name) {
@@ -83,27 +110,6 @@ client.on('message', message => {
         message.reply('Okay, something is messed up. I couldn\'t run that command. @SpiffyHat help me!');
     }
 
-    //if (command === 'ping') {
-    //    client.commands.get('ping').execute(message, args);
-    //    console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString());
-    //    //console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
-    //} else if (command === 'pizza') {
-    //    client.commands.get('pizza').execute(message, args);
-    //    console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString());
-    //    //console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
-    //} else if (command === 'minecraft') {
-    //    client.commands.get('minecraft').execute(message, args, minecraftServer, minecraftRCON);
-    //    console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString());
-    //    //console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
-    //} else if (command === 'codyiscool') {
-    //    client.commands.get('codyiscool').execute(message, args);
-    //    console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString());
-    //    //console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
-    //} else if (command === 'chatrevive') {
-    //    client.commands.get('chatrevive').execute(message, args, chatreviveList);
-    //    console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString());
-    //    //console.log('Request processed || ' + message.content + ' || received from ' + message.author.username.toString() + ' at ' + d.toLocaleTimeString() + ' ' + d.toLocaleDateString() + ' in ' + message.guild.name.toString() + ' - ' + message.channel.name.toString());
-    //}
 })
 
 //console.log(DISCORDKEY);
