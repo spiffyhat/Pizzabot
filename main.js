@@ -21,8 +21,6 @@ minecraftRCON.on('auth', function () {
     console.log("Minecraft RCON authed successfully");
 });
 
-minecraftRCON.connect();
-
 const chatrevive = fs.readFileSync("./chatrevive.txt").toString('utf-8');
 //console.log("got chatrevive, length " + chatrevive.length);
 const chatreviveList = chatrevive.split("\n");
@@ -48,9 +46,6 @@ for (const file of commandFiles) {
     }
     client.commands.set(command.name, command);
 }
-
-
-
 
 client.once('ready', () => {
     console.log('Pizzabot is online!');

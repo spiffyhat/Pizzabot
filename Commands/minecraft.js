@@ -38,9 +38,10 @@ const replies = {
 module.exports = {
     name: 'minecraft',
     description: 'This checks the status of the Arcade Discord Server',
-    execute(message, args, minecraftServer, rcon) {
+    execute(message, args, minecraftServer, rconObj) {
         if (args.length > 0 && args[0] === 'saytest') {
-            message.reply(replies.rcon.text.sending).then((rconmsg) => rconTest(rcon, rconmsg));
+            rconObj.connect();
+            message.reply(replies.rcon.text.sending).then((rconmsg) => rconTest(rconObj, rconmsg));
         } else {
             server = minecraftServer;
             thisArgs = args;
@@ -54,6 +55,7 @@ function rconTest(rcon, message) {
     try {
         rcon.send('/say This is a test!');
         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendsuccess));
+        rcon.disconnect();
     } catch (error) {
         console.error(error);
         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
