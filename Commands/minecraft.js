@@ -101,9 +101,15 @@ function replyStatus(message) {
 function getPlayers(sample) {
     let retval = "";
     for (const player of sample) {
-        retval += player.name + "\r\n";
+        var nameFixed = player.name.replace(/_/g, '\\_');
+        console.log("fixed name: " + nameFixed);
+        retval += nameFixed + "\r\n";
     }
     return retval;
+}
+
+function escapeMarkdown(original) {
+
 }
 
 //function ipCommand(message) { // Handle IP command
