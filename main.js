@@ -32,6 +32,8 @@ const minecraftServer = {
     port: config.MINECRAFTSERVERPORT
 }
 
+const staffChannelID = config.STAFFCHANNELID;
+
 client.commands = new Discord.Collection();
 
 const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
@@ -85,6 +87,14 @@ client.on('message', message => {
 
     console.log(command.name + " identified...");
 
+    if (command.permissions) {
+        const authorPerms = message.channel.permissionsFor(message.author);
+        if (!authorPerms || !authorPerms.has(command.permissions)) {
+            console.log('user ' + message.author.name + ' does not have permission!');
+            return message.reply('You don\'t have permission to use this command!');
+        }
+    }
+
     try {
         switch (command.name) {
             case 'minecraft':
@@ -106,6 +116,40 @@ client.on('message', message => {
     }
 
 })
+
+// Advertising reminder in staff chat channel, requested by @haziing
+
+const CHECK_INTERVAL = 1000 * 60; // check every minute
+var reminded = false;
+
+setInterval(function () {
+    try {
+        //console.log('Checking time for reminder...');
+        var currentdate = new Date();
+        //console.log('datetime hours: ' + currentdate.getHours().toString());
+        //console.log('datetime minutes: ' + currentdate.getMinutes().toString());
+
+        // the 14 shouldn't be hardcoded, just put it into the config some other time lol
+        if (currentdate.getHours() == 14) {
+            if (!reminded) {
+                console.log('Sending reminder message to staff!');
+                client.channels.cache.get(staffChannelID).send('Remember to advertise the server today! :wink:');
+                reminded = true;
+            } else {
+                //console.log('it time, but we already did the thing');
+            }
+        } else {
+            if (reminded) {
+                console.log('Flipping reminder flag back to false.');
+                reminded = false;
+            }
+        }
+    } catch (error) {
+        console.log('There was a problem with the setInterval function!');
+        console.log(error);
+    }
+    
+}, CHECK_INTERVAL)
 
 //console.log(DISCORDKEY);
 //console.log(config.DISCORDKEY);

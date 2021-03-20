@@ -1,8 +1,10 @@
 module.exports = {
-    name: 'help',
-    aliases: ['commands', 'info'],
-    description: 'This is the help command, pretty self-explanatory.',
-    execute(message, args) {
-        message.channel.send('Pretend I\'m helping you right now.');
-    }
-}
+	name: 'help',
+	description: 'List all of my commands or info about a specific command.',
+	aliases: ['commands'],
+	usage: '[command name]',
+	cooldown: 5,
+	execute(message, args) {
+		// ...
+	},
+};
