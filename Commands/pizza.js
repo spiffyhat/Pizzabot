@@ -77,7 +77,7 @@ module.exports = {
 			if (raisins) {
 				message.channel.send('There\'s no way I\'m going to make a pizza with raisins on it. Go to hell, ' + message.author.username.toString() + '.');
 			} else {
-				message.channel.send(beginning + toppingsString + ' pizza :pizza:. ' + 'Bone appletea, ' + message.author.username.toString() + '!');
+				message.channel.send(beginning + toppingsString + ' pizza :pizza:. ' + 'Bone appletea, ' + message.author.username.toString() + '!', { files: ["./images/testpizza.jpg"]});
 			}
 			
 		} else {

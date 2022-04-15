@@ -3,6 +3,6 @@ module.exports = {
     aliases: ['pingbutdifferent', 'pingalias'],
     description: 'This is just a ping command.',
     execute(message, args) {
-        message.channel.send('I\'m here!');
+        message.channel.send('I\'m alive!');
     }
 }

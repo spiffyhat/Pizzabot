@@ -10,12 +10,12 @@ const specialAliases = config.SPECIALALIASES;
 
 const Rcon = require('rcon');
 
-const Rconoptions = {
+const RCONoptions = {
     tcp: true,
     challenge: false
 };
 
-const minecraftRCON = new Rcon(config.MINECRAFTSERVERIP, config.MINECRAFTRCONPORT, config.MINECRAFTRCONPASSWORD, Rconoptions);
+const minecraftRCON = new Rcon(config.MINECRAFTSERVER_IP, config.MINECRAFTSERVER_RCONPORT, config.MINECRAFTSERVER_RCONPASSWORD, RCONoptions);
 
 minecraftRCON.on('auth', function () {
     console.log("Minecraft RCON authed successfully");
@@ -27,12 +27,12 @@ const chatreviveList = chatrevive.split("\n");
 //console.log("got list, length " + chatreviveList.length);
 
 const minecraftServer = {
-    name: config.MINECRAFTSERVERNAME,
-    ip: config.MINECRAFTSERVERIP,
-    port: config.MINECRAFTSERVERPORT
+    name: config.MINECRAFTSERVER_NAME,
+    ip: config.MINECRAFTSERVER_IP,
+    port: config.MINECRAFTSERVER_PORT
 }
 
-const staffChannelID = config.STAFFCHANNELID;
+// const staffChannelID = config.STAFFCHANNELID;
 
 client.commands = new Discord.Collection();
 
@@ -119,37 +119,37 @@ client.on('message', message => {
 
 // Advertising reminder in staff chat channel, requested by @haziing
 
-const CHECK_INTERVAL = 1000 * 60; // check every minute
-var reminded = false;
+// const CHECK_INTERVAL = 1000 * 60; // check every minute
+// var reminded = false;
 
-setInterval(function () {
-    try {
-        //console.log('Checking time for reminder...');
-        var currentdate = new Date();
-        //console.log('datetime hours: ' + currentdate.getHours().toString());
-        //console.log('datetime minutes: ' + currentdate.getMinutes().toString());
+// setInterval(function () {
+//     try {
+//         //console.log('Checking time for reminder...');
+//         var currentdate = new Date();
+//         //console.log('datetime hours: ' + currentdate.getHours().toString());
+//         //console.log('datetime minutes: ' + currentdate.getMinutes().toString());
 
-        // the 14 shouldn't be hardcoded, just put it into the config some other time lol
-        if (currentdate.getHours() == 14) {
-            if (!reminded) {
-                console.log('Sending reminder message to staff!');
-                client.channels.cache.get(staffChannelID).send('Remember to advertise the server today! :wink:');
-                reminded = true;
-            } else {
-                //console.log('it time, but we already did the thing');
-            }
-        } else {
-            if (reminded) {
-                console.log('Flipping reminder flag back to false.');
-                reminded = false;
-            }
-        }
-    } catch (error) {
-        console.log('There was a problem with the setInterval function!');
-        console.log(error);
-    }
+//         // the 14 shouldn't be hardcoded, just put it into the config some other time lol
+//         if (currentdate.getHours() == 14) {
+//             if (!reminded) {
+//                 console.log('Sending reminder message to staff!');
+//                 client.channels.cache.get(staffChannelID).send('Remember to advertise the server today! :wink:');
+//                 reminded = true;
+//             } else {
+//                 //console.log('it time, but we already did the thing');
+//             }
+//         } else {
+//             if (reminded) {
+//                 console.log('Flipping reminder flag back to false.');
+//                 reminded = false;
+//             }
+//         }
+//     } catch (error) {
+//         console.log('There was a problem with the setInterval function!');
+//         console.log(error);
+//     }
     
-}, CHECK_INTERVAL)
+// }, CHECK_INTERVAL)
 
 //console.log(DISCORDKEY);
 //console.log(config.DISCORDKEY);
