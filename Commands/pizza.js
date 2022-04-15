@@ -82,7 +82,7 @@ module.exports = {
 			
 		} else {
 
-			message.channel.send('I\'m in beta, so this is the only pizza I\'ve got right now, sorry!', { files: ["./images/testpizza.jpg"]});
+			message.channel.send('Did someone say pizza? :heart_eyes: \r\n\r\n I\'m in beta, so this is the only pizza I\'ve got right now, sorry!', { files: ["./images/testpizza.jpg"]});
 
 			//message.channel.send(beginning + 'pizza :pizza:. ' + 'Bone appletea, ' + message.author.username.toString() + '!');
 
