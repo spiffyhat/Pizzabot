@@ -34,34 +34,64 @@ const replies = {
             sendsuccess: 'Successfully sent test message to server.',
             sendfail: 'There was a problem sending the test message to the Minecraft server.',
             restarted: 'Minecraft server **{serverName}** restarted.',
+            whitelisted: 'Whitelisted user {username}',
+            blacklisted: 'Removed user {username} from the whitelist',
             restartTooSoon: 'The server was just restarted at {lastRestarted}, you\'ll need to wait at least 15 minutes between restarts.',
-            restartPermission: 'You don\'t have permission to restart the server! HACKER ALERT'
+            restartPermission: 'You don\'t have permission to restart the server! HACKER ALERT',
+            whitelistPermission: 'You don\'t have permission to modify the whitelist! Ask someone more powerful!',
+            missingUsername: '{command} is missing a command argument: username'
         }
     }
 };
 
 module.exports = {
     name: 'minecraft',
-    description: 'This checks the status of the Arcade Discord Server',
+    description: 'This performs various functions on the Minecraft server',
     execute(message, args, minecraftServer, rconObj) {
         server = minecraftServer;
         thisArgs = args;
+        const authorPerms = message.channel.permissionsFor(message.author);
         if (args.length > 0) {
             switch (args[0].toString()) { 
                 case 'saytest':
                     rconObj.connect();
-                    message.reply(replies.rcon.text.sending).then((rconmsg) => rconTest(rconObj, rconmsg));
-                    break;
+                    return message.reply(replies.rcon.text.sending).then((rconmsg) => rconTest(rconObj, rconmsg));
                 case 'restart':
-                    const authorPerms = message.channel.permissionsFor(message.author);
                     if (!authorPerms || !authorPerms.has('KICK_MEMBERS')) {
                         console.log('user ' + message.author.username + ' does not have permission to restart!');
                         return message.reply(replies.rcon.text.restartPermission);
                     } else {
                         rconObj.connect();
-                        message.reply(replies.rcon.text.sending).then((rconmsg) => restart(rconObj, rconmsg));
+                        return message.reply(replies.rcon.text.sending).then((rconmsg) => restart(rconObj, rconmsg));
                     }
-                    break;
+                case 'whitelist':
+                    if (!authorPerms || !authorPerms.has('KICK_MEMBERS')) {
+                        console.log('user ' + message.author.username + ' does not have permission to modify the whitelist!');
+                        return message.reply(replies.rcon.text.whitelistPermission);
+                    } else {
+                        if (args.length = 2) {
+                            console.log('whitelisting ' + args[1].toString());
+                            rconObj.connect();
+                            return message.reply(replies.rcon.text.sending).then((rconmsg) => whitelist(rconObj, rconmsg, args[1].toString()));
+                        } else {
+                            console.log('whitelist missing parameter for username');
+                            return message.reply(replies.rcon.text.missingUsername.replace('{command}', 'Whitelist'));
+                        }
+                    }
+                case 'blacklist': 
+                    if (!authorPerms || !authorPerms.has('KICK_MEMBERS')) {
+                        console.log('user ' + message.author.username + ' does not have permission to modify the whitelist!');
+                        return message.reply(replies.rcon.text.whitelistPermission);
+                    } else {
+                        if (args.length = 2) {
+                            console.log('blacklisting ' + args[1].toString());
+                            rconObj.connect();
+                            return message.reply(replies.rcon.text.sending).then((rconmsg) => blacklist(rconObj, rconmsg, args[1].toString()));
+                        } else {
+                            console.log('whitelist missing parameter for username');
+                            return message.reply(replies.rcon.text.missingUsername.replace('{command}', 'Blacklist'));
+                        }
+                    }
                 default:
                     console.log("HOW DID THIS HAPPEN, minecraft COMMAND?!?");
                     break;
@@ -87,6 +117,28 @@ function restart(rcon, message) {
             var d = new Date(lastRestarted);
             message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.restartTooSoon.replace('{lastRestarted}', d.toLocaleTimeString())));
         }
+    } catch (error) {
+        console.error(error);
+        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
+    }
+}
+
+function whitelist(rcon, message, username) {
+    try {
+        rcon.send('/whitelist add ' + username);
+        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.whitelisted.replace('{username}', username)));
+        rcon.disconnect();
+    } catch (error) {
+        console.error(error);
+        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
+    }
+}
+
+function blacklist(rcon, message, username) {
+    try {
+        rcon.send('/whitelist remove ' + username);
+        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.blacklisted.replace('{username}', username)));
+        rcon.disconnect();
     } catch (error) {
         console.error(error);
         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
