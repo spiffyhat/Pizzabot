@@ -28,6 +28,7 @@ bld/
 [Ll]og/
 
 # The config file because reasons
+config.json
 config.js
 
 # Visual Studio 2015/2017 cache/options directory
