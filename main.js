@@ -14,6 +14,12 @@ const chatrevive = fs.readFileSync("./chatrevive.txt").toString('utf-8');
 const chatreviveList = chatrevive.split("\n");
 //console.log("got list, length " + chatreviveList.length);
 
+const minecraftServer = {
+    name: config.MINECRAFTSERVER_NAME,
+    ip: config.MINECRAFTSERVER_IP,
+    port: config.MINECRAFTSERVER_PORT
+}
+
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
@@ -41,7 +47,11 @@ client.on('interactionCreate', async interaction => {
 
 	try {
 
-		await command.execute(interaction);
+		if (command.name = 'minecraft') {
+			await command.execute(interaction, minecraftServer)
+		} else {
+			await command.execute(interaction);
+		}
 
 	} catch (error) {
 		console.error(error);
