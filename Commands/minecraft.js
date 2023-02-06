@@ -203,12 +203,12 @@ function replyStatus() {
         let { text } = replies.status;
         let status = text.online;
 
-        status += data.players.sample.length > 0 ? text.players : text.noPlayers;
+        status += (data.players.sample != null && data.players.sample.length > 0) ? text.players : text.noPlayers;
         
         status = status.replace('{serverName}', server.name);
-        status = status.replace('{online}', data.players.sample.length);
+        status = status.replace('{online}', (data.players.sample != null && data.players.sample.length > 0) ? data.players.sample.length : '0');
 
-        status += data.players.sample.length > 0 ? "\r\n" + text.playersList + "\r\n" + getPlayers(data.players.sample) : ""; 
+        status += (data.players.sample != null && data.players.sample.length > 0) ? "\r\n" + text.playersList + "\r\n" + getPlayers(data.players.sample) : ""; 
         status += text.lastChecked;
         status = status.replace('{cacheSeconds}', cacheSeconds);
         console.log(status);
