@@ -57,6 +57,7 @@ client.on('interactionCreate', async interaction => {
 	if (!command) return;
 
 	try {
+		//interaction.reply('Working on it...');
 		console.log('processing command: ' + command.data.name);
 	
 		if (command.data.name == 'minecraft') {
@@ -69,7 +70,11 @@ client.on('interactionCreate', async interaction => {
 
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		if (interaction.replied == false) {
+			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		} else {
+		await interaction.editReply({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
 	}
 });
 
