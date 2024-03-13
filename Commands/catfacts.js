@@ -5,9 +5,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('catfacts')
         .setDescription('Replies with a cat fact!'),
-    aliases: ['catfact', 'meow'],
     async execute(interaction) {
-        
+        await interaction.reply('Wait for it...');
+
         // console.log('Sending Cat Fact request...');
         const catResult = await request('https://catfact.ninja/fact');
         
@@ -16,7 +16,7 @@ module.exports = {
         const { fact } = await getJSONResponse(catResult.body);
         
         // console.log('Replying...');
-        interaction.reply(fact);
+        interaction.editReply(fact);
 
     },
 };

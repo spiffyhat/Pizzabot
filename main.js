@@ -14,10 +14,17 @@ const chatrevive = fs.readFileSync("./chatrevive.txt").toString('utf-8');
 const chatreviveList = chatrevive.split("\n");
 //console.log("got list, length " + chatreviveList.length);
 
-const minecraftServer = {
+const _minecraftServer = {
     name: config.MINECRAFTSERVER_NAME,
     ip: config.MINECRAFTSERVER_IP,
     port: config.MINECRAFTSERVER_PORT
+}
+
+const _7DaysServer = {
+    name: config.SEVENDAYSSERVER_NAME,
+    ip: config.SEVENDAYSSERVER_IP,
+    port: config.SEVENDAYSSERVER_PORT,
+	pass: config.SEVENDAYSSERVER_RCONPASSWORD
 }
 
 client.commands = new Collection();
@@ -31,6 +38,10 @@ for (const file of commandFiles) {
 	// With the key as the command name and the value as the exported module
 	client.commands.set(command.data.name, command);
 }
+
+process.on('unhandledRejection', error => {
+	console.error('Unhandled promise rejection:', error);
+});
 
 client.once('ready', () => {
     console.log('Pizzabot is online!');
@@ -46,9 +57,12 @@ client.on('interactionCreate', async interaction => {
 	if (!command) return;
 
 	try {
-
-		if (command.name = 'minecraft') {
-			await command.execute(interaction, minecraftServer)
+		console.log('processing command: ' + command.data.name);
+	
+		if (command.data.name == 'minecraft') {
+			await command.execute(interaction, _minecraftServer)
+		} else if (command.data.name == '7days') {
+			await command.execute(interaction, _7DaysServer)
 		} else {
 			await command.execute(interaction);
 		}
