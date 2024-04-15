@@ -17,6 +17,7 @@ const replies = {
             error: 'Error getting {serverName} Minecraft server status. It may be offline or restarting!', // Check your terminal when you see this
             online: '**{serverName}** Minecraft server is **online**  -  ',
             players: '**{online}** people are playing!', // {online} will show player count
+            player: '**{online}** person is playing!',
             playersList: '**Players online:** ',
             lastChecked: ' (data is updated every {cacheSeconds} seconds)',
             checking: 'Checking...',
@@ -203,7 +204,7 @@ function replyStatus() {
         let { text } = replies.status;
         let status = text.online;
 
-        status += (data.players.sample != null && data.players.sample.length > 0) ? text.players : text.noPlayers;
+        status += (data.players.sample != null && data.players.sample.length > 0) ? (data.players.sample.length == 1 ? text.player : text.players) : text.noPlayers;
         
         status = status.replace('{serverName}', server.name);
         status = status.replace('{online}', (data.players.sample != null && data.players.sample.length > 0) ? data.players.sample.length : '0');
