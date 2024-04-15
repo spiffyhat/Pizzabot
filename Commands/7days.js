@@ -94,8 +94,10 @@ module.exports = {
         .setDescription('Retrieves information about the 7 Days to Die server.'),
         //.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction, _7DaysServer) {
-        
-      try {
+        if (_7DaysServer.name === "DISABLED") {
+          await interaction.reply("There isn't a 7 Days To Die server right now. Maybe one day it will return...");
+        } else {
+          try {
         await interaction.reply('Working on it...');
         telnet = new TelnetClient.Telnet();
         var replyContent = '**7 Days to Die Server Status (BETA)**\r\n\r\n';
@@ -191,6 +193,7 @@ module.exports = {
       } catch (error) {
         console.error(error);
       await interaction.editReply({ content: 'There was an error while executing this command!', ephemeral: true });
+      }
     }
   },
 };
