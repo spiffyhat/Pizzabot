@@ -1,14 +1,15 @@
 const { SlashCommandBuilder } = require('discord.js');
 const util = require('minecraft-server-util');
-const wait = require('node:timers/promises').setTimeout;
+//const wait = require('node:timers/promises').setTimeout;
 
 const cacheSeconds = 30;
-const serverRestartInterval = 900;
+//const serverRestartInterval = 900;
 const cacheTime = cacheSeconds * 1000; // 30 sec cache time
-const restartTime = serverRestartInterval * 1000;
-let data, fullData, lastUpdated, lastRestarted;
+//const restartTime = serverRestartInterval * 1000;
+let data, lastUpdated;
+//let fullData, lastRestarted;
 let server;
-let thisArgs;
+//let thisArgs;
 
 const replies = {
     status: {
@@ -50,7 +51,7 @@ const replies = {
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('minecraft')
-    .setDescription('This performs various functions on the Minecraft server'),
+    .setDescription('This checks the status of the Minecraft server'),
     async execute(interaction, minecraftServer) {
         server = minecraftServer;
         try {
@@ -117,62 +118,62 @@ module.exports = {
     }
 }
 
-function restart(rcon, message) {
-    try {
-        // restart the minecraft server via rcon
-        if (!lastRestarted || Date.now() > lastRestarted + restartTime) {
-            console.log("restarting minecraft server...");
-            rcon.send('/say RESTARTING NOW... haha just kidding, this is a test.');
-            console.log("restarted server here");
-            message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.restarted.replace('{serverName}', server.name)));
-            lastRestarted = Date.now();
-            rcon.disconnect();
-        } else {
-            var d = new Date(lastRestarted);
-            message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.restartTooSoon.replace('{lastRestarted}', d.toLocaleTimeString())));
-        }
-    } catch (error) {
-        console.error(error);
-        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
-    }
-}
+// function restart(rcon, message) {
+//     try {
+//         // restart the minecraft server via rcon
+//         if (!lastRestarted || Date.now() > lastRestarted + restartTime) {
+//             console.log("restarting minecraft server...");
+//             rcon.send('/say RESTARTING NOW... haha just kidding, this is a test.');
+//             console.log("restarted server here");
+//             message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.restarted.replace('{serverName}', server.name)));
+//             lastRestarted = Date.now();
+//             rcon.disconnect();
+//         } else {
+//             var d = new Date(lastRestarted);
+//             message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.restartTooSoon.replace('{lastRestarted}', d.toLocaleTimeString())));
+//         }
+//     } catch (error) {
+//         console.error(error);
+//         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
+//     }
+// }
 
-function whitelist(rcon, message, username) {
-    try {
-        rcon.send('/whitelist add ' + username);
-        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.whitelisted.replace('{username}', username)));
-        rcon.disconnect();
-    } catch (error) {
-        console.error(error);
-        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
-    }
-}
+// function whitelist(rcon, message, username) {
+//     try {
+//         rcon.send('/whitelist add ' + username);
+//         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.whitelisted.replace('{username}', username)));
+//         rcon.disconnect();
+//     } catch (error) {
+//         console.error(error);
+//         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
+//     }
+// }
 
-function blacklist(rcon, message, username) {
-    try {
-        rcon.send('/whitelist remove ' + username);
-        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.blacklisted.replace('{username}', username)));
-        rcon.disconnect();
-    } catch (error) {
-        console.error(error);
-        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
-    }
-}
+// function blacklist(rcon, message, username) {
+//     try {
+//         rcon.send('/whitelist remove ' + username);
+//         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.blacklisted.replace('{username}', username)));
+//         rcon.disconnect();
+//     } catch (error) {
+//         console.error(error);
+//         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
+//     }
+// }
 
-function rconTest(rcon, message) {
-    try {
-        rcon.send('/say This is a test!');
-        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendsuccess));
-        rcon.disconnect();
-    } catch (error) {
-        console.error(error);
-        message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
-    }
-}
+// function rconTest(rcon, message) {
+//     try {
+//         rcon.send('/say This is a test!');
+//         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendsuccess));
+//         rcon.disconnect();
+//     } catch (error) {
+//         console.error(error);
+//         message.edit(message.content.replace(replies.rcon.text.sending, replies.rcon.text.sendfail));
+//     }
+// }
 
-function testString() {
-    return 'Pretend I did the thing!';
-}
+// function testString() {
+//     return 'Pretend I did the thing!';
+// }
 
 async function statusCommand() { // Handle status command
     //console.log("Datetime now, last updated, cache time:");
@@ -200,39 +201,29 @@ async function statusCommand() { // Handle status command
 }
 
 function replyStatus() {
-    try {
-        let { text } = replies.status;
-        let status = text.online;
+    let { text } = replies.status;
+    let status = text.online;
 
-        status += (data.players.sample != null && data.players.sample.length > 0) ? (data.players.sample.length == 1 ? text.player : text.players) : text.noPlayers;
-        
-        status = status.replace('{serverName}', server.name);
-        status = status.replace('{online}', (data.players.sample != null && data.players.sample.length > 0) ? data.players.sample.length : '0');
-
-        status += (data.players.sample != null && data.players.sample.length > 0) ? "\r\n" + text.playersList + "\r\n" + getPlayers(data.players.sample) : ""; 
-        status += text.lastChecked;
-        status = status.replace('{cacheSeconds}', cacheSeconds);
-        console.log(status);
-        return status;
-    } catch (error) {
-        throw error;
-    }
+    status += (data.players.sample != null && data.players.sample.length > 0) ? (data.players.sample.length == 1 ? text.player : text.players) : text.noPlayers;
     
+    status = status.replace('{serverName}', server.name);
+    status = status.replace('{online}', (data.players.sample != null && data.players.sample.length > 0) ? data.players.sample.length : '0');
+
+    status += (data.players.sample != null && data.players.sample.length > 0) ? "\r\n" + text.playersList + "\r\n" + getPlayers(data.players.sample) : ""; 
+    status += text.lastChecked;
+    status = status.replace('{cacheSeconds}', cacheSeconds);
+    console.log(status);
+    return status;
 }
 
 function getPlayers(sample) {
-    try {
-        let retval = "";
-        for (const player of sample) {
-            var nameFixed = player.name.replace(/_/g, '\\_');
-            console.log("fixed name: " + nameFixed);
-            retval += nameFixed + "\r\n";
-        }
-        return retval;
-    } catch (error) {
-        throw error;
+    let retval = "";
+    for (const player of sample) {
+        var nameFixed = player.name.replace(/_/g, '\\_');
+        console.log("fixed name: " + nameFixed);
+        retval += nameFixed + "\r\n";
     }
-    
+    return retval;    
 }
 
 //function ipCommand(message) { // Handle IP command
