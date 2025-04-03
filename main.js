@@ -17,7 +17,9 @@ const chatreviveList = chatrevive.split("\n");
 const _minecraftServer = {
     name: config.MINECRAFTSERVER_NAME,
     ip: config.MINECRAFTSERVER_IP,
-    port: config.MINECRAFTSERVER_PORT
+    port: config.MINECRAFTSERVER_PORT,
+	rconport: config.MINECRAFTSERVER_RCONPORT,
+	queryport: config.MINECRAFTSERVER_QUERYPORT
 }
 
 const _7DaysServer = {
