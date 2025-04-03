@@ -6,12 +6,12 @@ const config = require('./config.js');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const DISCORDKEY = config.DISCORDKEY;
-const prefix = config.PREFIX;
-const specialAliases = config.SPECIALALIASES;
+//const prefix = config.PREFIX;
+//const specialAliases = config.SPECIALALIASES;
 
-const chatrevive = fs.readFileSync("./chatrevive.txt").toString('utf-8');
+//const chatrevive = fs.readFileSync("./chatrevive.txt").toString('utf-8');
 //console.log("got chatrevive, length " + chatrevive.length);
-const chatreviveList = chatrevive.split("\n");
+//const chatreviveList = chatrevive.split("\n");
 //console.log("got list, length " + chatreviveList.length);
 
 const _minecraftServer = {
