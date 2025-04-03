@@ -33,16 +33,20 @@ module.exports = {
 
         if (online) {
             replyString += "\r\n\r\n"
-            
-            if (response.players.list != null) {
+            //console.log(response.players.list.length > 0);
+
+            if (response.players.list != null && response.players.list.length > 0) {
     
                 const players = await getPlayers(response.players.list);
                 
                 //console.log(players);
-        
-                replyString += 'Players online: ' + players;
+                
+                replyString += 'There ' + (response.players.list.length > 1 ? 'are ' : 'is ')
+                                + response.players.list.length + ' player'
+                                + (response.players.list.length > 1 ? 's' : '')
+                                + ' online: ' + players;
             } else {
-                replyString += 'No players online.';
+                replyString += 'There are 0 players online.';
             }
         }
         
